@@ -1,0 +1,247 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[europeanresistors]{circuitikz}
+\usepackage{geometry} %Pour les marges
+
+
+\title{Compte-rendu de TP - composant analogique
+Transistor bipolaire}
+\author{Gabriel Chiapello}
+\date{27 novembre 2020}
+
+\usepackage{natbib}
+\usepackage{graphicx}
+
+\geometry{verbose,tmargin=0.7in,bmargin=1in,lmargin=1.2in,rmargin=1.2in}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+
+\section{Introduction}
+Notre objectif dans cette séance est d'étudier l'intérêt du transistor bipolaire à émetteur commun, et réaliser sa fonction de l’amplificateur de tension. Ainsi ce TP nous apporte de l’aisance dans la manipulation des différents composants.
+
+
+\section{Polarisation statique}
+\subsection{Montage}
+
+\begin{center}
+\begin{circuitikz}[american voltages]
+\draw
+    (0,0) to[V, v=$E$, invert] (0,9)
+    to (3,9)
+    to[R, l=$R_{B_1}$] (3,5)
+    to[R, l=$R_{B_2}$] (3,0) -- (0,0)
+    (5,5) node[npn] (tr) {}
+    (3,5) to(tr.base) node[anchor=north] {B}
+    (tr.collector) node[anchor=west] {C}
+    to[R, l=$R_C$] (5,9)
+    (5,9) -- (3,9)
+    
+    (4,9) node[vcc] (VCC) {}
+    (4,0) node[ground] (GND) {}
+    (tr.emitter) node[anchor=west] {E}
+    to(5,4)
+    to[R, l=$R_E$] (5,0) -- (3,0)
+\end{circuitikz}
+\end{center}
+
+
+\subsection*{Matériel utilisé}
+
+\begin{itemize}
+    \item 2 résistances de base $R_{B1}$ = 33KΩ et $R_{B2}$ = 220KΩ
+    \item 3 resistances de $R_C$ (470 Ω, 2,2 kΩ et 4,7 kΩ)
+    \item 1 multimetre
+    \item 1 alimentation statique
+    \item 1 carte du transistor bipolaire
+\end{itemize}
+
+\subsection{Protocole de mesures}
+\begin{itemize}
+    \item Réalisation du montage représenté par le schéma ci-dessus.
+    \item Alimentation du montage.
+    \item Calcul de la valeur de $I_C$ et réglage de la tension E pour obtenir $I_C$ = 2 mA.
+    \item On varie la valeur de la résistance RC et on relève chaque valeur de tension $V_E$, $V_{CE}$, $V_B$.
+\end{itemize}
+
+\subsection{Mesures}
+
+\begin{center}
+    \begin{tabular}{||c | c||}
+    \hline
+    $R_C$ & $V_{CE}$\\
+    \hline
+    \hline
+    470  & 20,3\\
+    \hline
+    1000  & 19,4\\
+    \hline
+    2200  & 17\\
+    \hline
+    3300  & 14,9\\
+    \hline
+    4700  & 12,1\\
+    \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Exploitation des mesures}
+En comparant les valeurs théoriques avec les valeurs réelles, on peut voir que l’on est toujours un peu au dessus, mais on reste dans un ordre de grandeur cohérent.
+
+\begin{center}
+    \begin{tabular}{||c | c | c || c||}
+    \hline
+    $R_C$ & $R_C$ & $V_{CE_{th}}$ & $V_{CE_{mes}}$\\
+    \hline
+    \hline
+    470 & 0.94 & 20.06 & 20,3\\
+    \hline
+    1000 & 2 & 19 & 19,4\\
+    \hline
+    2200 & 4.4 & 16.6 & 17\\
+    \hline
+    3300 & 6.6 & 14.4 & 14,9\\
+    \hline
+    4700 & 9.4 & 11.6 & 12,1\\
+    \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Comparaison avec la théorie}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.6]{Capture1.PNG}
+\caption{Courbe théorique et courbe mesurée}
+\label{fig:vce}
+\end{figure}
+
+En comparant les valeurs théoriques avec les valeurs réelles, on peut voir que les mesures sont légèrement au dessus de la théorie. Néanmoins, on obtient un résultat cohérent et une courbe de la même allure.
+
+
+
+\section{Etude dynamique}
+\subsection{Montage}
+
+\begin{center}
+\begin{circuitikz}[american voltages]
+\draw
+    (0,0) to[\bipole{vsourcesin}, l=$Eg$] (0,5)
+    to[R, l=$R_G$] (2,5)
+    to[C, l=$C_1$] (3,5)
+    to[R, l=$R_{B_2}$] (3,0) -- (0,0)
+    (5,5) node[npn] (tr) {}
+    (3,5) to(tr.base) node[anchor=north] {B}
+    (tr.collector) node[anchor=west] {C}
+    to[R, l=$R_C$] (5,9)
+    (5,9) -- (3,9)
+    to[R, l=$R_{B_1}$] (3,5)
+    (4,9) node[vcc] (VCC) {}
+    (4,0) node[ground] (GND) {}
+    (tr.emitter) node[anchor=west] {E}
+    to(5,4)
+    to[R, l=$R_E$] (5,0) -- (3,0)
+    (5,3.5) -- (7,3.5)
+    to[C, l=$C_2$] (7,0) -- (5,0)
+    (0,7) node[ground] (GND) {} to[V, v=$V_2$, invert] (0,9) -- (3,9)
+\end{circuitikz}
+\end{center}
+
+
+\subsection*{Matériel utilisé}
+
+\begin{itemize}
+    \item 2 résistances de base $R_{B1}$ = 33KΩ et $R_{B2}$ = 220KΩ
+    \item 5 resistances de $R_C$ (470 Ω, 2,2 kΩ, 3,3 kΩ, 1 kΩ et 4,7 kΩ)
+    \item 1 multimetre
+    \item 1 alimentation statique
+    \item 1 carte du transistor bipolaire
+    \item 1 oscilloscope
+    \item 1 GBF
+\end{itemize}
+
+\subsection{Protocole de mesures}
+On garde le montage précédent, ensuite on branche ce montage avec le GBF pour avoir un signal dynamique en entrée, et on ajoute un oscilloscope pour observer le signal de sortie.
+On relève la courbe du signal de sortie ainsi que la fréquence de coupure $f_C$. Celle-ci est mise en évidence lorsque le signal de sortie a un déphasage de 45° par rapport au signal d’entrée.
+A l’aide du multimètre, on mesure les tensions $V_{B2}$ et $V_{B1}$ et l’oscilloscope nous donne le temps de montée $\tau_M$.
+On calcule $I_{B1}$ et $I_{B2}$ pour avoir la valeur de $I_{B1}$, et le gain de courant $\beta$ le gain de tension $Av_{BF}$, la résistance interne entre la base et l'émetteur $r_{BE}$.
+
+\subsection{Mesures}
+Pour mesurer la bonne fréquence de coupure, on cherche la phase entre $V_E$ et $V_S$, et on règle la fréquence pour obtenir la phase $\phi$ = 45° car ce montage est bien de premier ordre.
+
+\begin{center}
+    \begin{tabular}{||c | c | c | c | c | c | c | c||}
+    \hline
+    $R_C$ (Ω) & $V_{CE}$ (V) & $V_{BE}$ (V) & eg (V) & $f_{AI_{BF}}$ (kHz) & $\tau_M$ (ms) & $Av_{BF}$ & $Ai_{BF}$\\
+    \hline
+    \hline
+    470  & 20,3 & 0,633 & 0,8 & 440 & 0,0007 & 32,06 & 1466,00\\
+    \hline
+    1000  & 19,4 & 0,63 & 0,8 & 240 & 0,0013 & 30,79 & 144,90\\
+    \hline
+    2200  & 17 & 0,633 & 0,8 & 140 & 0,0023 & 26,86 & 146,00\\
+    \hline
+    3300  & 14,9 & 0,636 & 0,8 & 90 & 0,0033 & 23,43 & 147,12\\
+    \hline
+    4700  & 12,1 & 0,636 & 0,8 & 60 & 0,0046 & 19,03 & 147,12\\
+    \hline
+    \end{tabular}
+\end{center}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{Capture2.PNG}
+\caption{Mesure du déphasage}
+\label{fig:dephasage}
+\end{figure}
+
+On relève ici la tension en entrée (CH1) et la tension de sortie (CH2) pour pouvoir mesurer le déphasage entre les deux.
+
+\subsection{Exploitation des mesures}
+On a trouvé que $Ai_BF$ est approximativement une constante, et $<Ai_{BF}>$ = 146,23. C'est bien cohérent avec à la valeur donnée dans la documentation.
+En sachant que $r_{BE} = r_{B`E} + r_{BB`}$, à l'aide de la formule $Av_{BF} = \frac{- \beta.R_C}{r_{BB`} + r_{B`E}}$ avec $\beta=<Ai_{BF}>=146,23$, on a trouvé que pour chaque valeur de $R_C$ différente, on a :
+
+\begin{center}
+    \begin{tabular}{||c | c||}
+    \hline
+    $R_C$ ($\Omega$) & $R_{BE}$ ($\Omega$)\\
+    \hline
+    \hline
+    470  & 2143\\
+    \hline
+    1000  & 4749\\
+    \hline
+    2200  & 11979\\
+    \hline
+    3300  & 20598\\
+    \hline
+    4700  & 36125\\
+    \hline
+    \end{tabular}
+\end{center}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{Capture3.PNG}
+\caption{Relation entre $f_{i_{BF}}$ et $R_C$}
+\label{fig:f}
+\end{figure}
+
+On observe que la relation de $f_{i_{BF}}$ et $R_C$ est bien linéaire.
+
+
+
+\section{Conclusion}
+Finalement, nous avons pu constater à travers ce TP une des applications d’un transistor bipolaire, mais également ses limites. En effet, la tension d’entrée est limitée au risque de faire saturer la sortie, et il réagit également comme un filtre passe-bas. C’est un effet dont on peut se servir à son avantage, mais qui ne doit pas être négligé.
+
+
+
+
+
+\end{document}
+
+\documentclass{article}
